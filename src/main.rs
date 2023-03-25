@@ -1,8 +1,4 @@
-use std::{
-    fs,
-    path::{Path, PathBuf},
-    process::Command,
-};
+use std::{fs, path::Path, process::Command};
 
 fn main() {
     let input = "/Users/bytedance/";
@@ -97,9 +93,5 @@ fn check_cargo(path: &Path) -> bool {
         }
     }
 
-    if cargo_flag && target_flag {
-        true
-    } else {
-        false
-    }
+    cargo_flag && target_flag
 }
