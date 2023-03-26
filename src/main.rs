@@ -1,11 +1,17 @@
-use std::{any, fs, path::Path, process::Command};
+use std::{any, env, fs, path::Path, process::Command};
 
 use anyhow::Ok;
 
 fn main() -> Result<(), anyhow::Error> {
-    let input = "/Users/bytedance/github/";
-    let mut dirs = vec![input.to_string()];
-    traverse_directory(Path::new(input), &mut dirs)?;
+    let args = env::args().collect::<Vec<_>>();
+    if args.len() < 2 {
+        println!("Usage: {} <path>", args[0]);
+        return Ok(());
+    }
+
+    let input = args[1].to_owned();
+    let mut dirs = vec![];
+    traverse_directory(Path::new(input.as_str()), &mut dirs)?;
 
     dirs.iter().for_each(|x| {
         let clean_output = Command::new("cargo")
