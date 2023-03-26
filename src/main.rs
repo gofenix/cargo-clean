@@ -1,4 +1,4 @@
-use std::{any, env, fs, path::Path, process::Command};
+use std::{env, fs, path::Path, process::Command};
 
 use anyhow::Ok;
 
@@ -37,7 +37,7 @@ fn traverse_directory(path: &Path, dirs: &mut Vec<String>) -> Result<(), anyhow:
                 continue;
             }
             if check_cargo(&entry_path)? {
-                println!("{}", entry_path.to_string_lossy().to_string());
+                println!("{}", entry_path.to_string_lossy());
                 dirs.push(entry_path.to_string_lossy().to_string());
             }
             traverse_directory(&entry_path, dirs)?;
@@ -91,10 +91,8 @@ fn check_cargo(path: &Path) -> Result<bool, anyhow::Error> {
             if entry_path.file_name().unwrap() == "target" {
                 target_flag = true;
             }
-        } else {
-            if entry_path.file_name().unwrap() == "Cargo.toml" {
-                cargo_flag = true;
-            }
+        } else if entry_path.file_name().unwrap() == "Cargo.toml" {
+            cargo_flag = true;
         }
     }
 
