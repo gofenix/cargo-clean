@@ -4,6 +4,14 @@
 
 # 安装
 
+## 从cargo安装
+
+```
+cargo install cargo-clean
+```
+
+## 直接从git安装
+
 ```
 cargo install --locked --force --git https://github.com/zhenfeng-zhu/cargo-clean.git
 ```
