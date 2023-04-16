@@ -3,6 +3,8 @@ use std::{env, fs, path::Path, process::Command};
 use anyhow::Ok;
 
 fn main() -> Result<(), anyhow::Error> {
+    let cwd = env::current_dir()?;
+
     let args = env::args().collect::<Vec<_>>();
     if args.len() < 2 {
         println!("Usage: {} <path>", args[0]);
@@ -10,8 +12,15 @@ fn main() -> Result<(), anyhow::Error> {
     }
 
     let input = args[1].to_owned();
+    let out = cwd.join(input);
+    println!("-----> out: {}", out.display());
+
     let mut dirs = vec![];
-    traverse_directory(Path::new(input.as_str()), &mut dirs)?;
+    traverse_directory(Path::new(out.as_path()), &mut dirs)?;
+    if dirs.len() == 0{
+        println!("There are no target file should be clean in {}", out.display());
+        return Ok(());
+    }
 
     dirs.iter().for_each(|x| {
         let clean_output = Command::new("cargo")
@@ -28,10 +37,16 @@ fn main() -> Result<(), anyhow::Error> {
 }
 
 fn traverse_directory(path: &Path, dirs: &mut Vec<String>) -> Result<(), anyhow::Error> {
+    if check_cargo(&path)? {
+        println!("{}", path.to_string_lossy());
+        dirs.push(path.to_string_lossy().to_string());
+    }
+
     let entries = fs::read_dir(path)?;
 
     for entry in entries {
         let entry_path = entry?.path();
+        println!("-----> {}", entry_path.display());
         if entry_path.is_dir() {
             if !ignore(entry_path.to_string_lossy().to_string()) {
                 continue;
