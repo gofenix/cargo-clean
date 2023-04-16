@@ -4,3 +4,13 @@
 
 # 安装
 
+```
+cargo install --locked --force --git https://github.com/zhenfeng-zhu/cargo-clean.git
+```
+
+# 用法
+
+```
+## 移除当前目录下的所有rust构建缓存，一键释放你的磁盘空间。
+cargo-clean .
+```
